@@ -9,9 +9,30 @@ router.get('/',(req,res)=>{
     });
 });
 router.post('/',(req,res)=>{
+    if (req.body._id == '')
      insertData(req,res); 
+     else
+     updateRecord(req,res);
 });
 
+function updateRecord(req, res){
+    Employee.findOneAndUpdate({_id: req._id.body}, req.body, {new:true}, (err, doc) => {
+        if (!err){ res.render('employee/list');
+        }
+        else {
+            if (err.name == 'Validation Error'){
+                handleValidationError(err, req.body);
+                res.render("employee/editOrAdd", {
+                    viewTitle = "Update Employee",
+                    employee: req.body
+                });
+            }
+            else {
+                console.log("Error occured during update: " + err); 
+            }
+        }
+    });
+}
 function insertData(req,res){
     var employee = new Employee();
     employee.fullName = req.body.fullName;
@@ -36,8 +57,18 @@ function insertData(req,res){
 }
 
 router.get('/list', (req, res) => {
-    res.json('from list');
+    Employee.find((err,docs) => {
+        if(!err){
+            res.render("employee/list", {
+            list: docs
+            });
+        }
+        else {
+            console.log('Error in retrieving list of employees: ' + err);
+        }
+    });
 });
+
 function handleValidationError(err, body) {
     for (field in err.errors) {
         switch (err.errors[field].path) {
@@ -52,5 +83,16 @@ function handleValidationError(err, body) {
         }
     }
 }
+router.get('/:id', (req, res) => {
+    Employee.findById(req.params.id, (err,doc) => {
+        if(!err){
+            res.render("employee/editOrAdd", {
+                viewTitle: "Update Employee",
+                employee: doc
+            });
+        }
+    });
+});
 
 module.exports = router;
+
