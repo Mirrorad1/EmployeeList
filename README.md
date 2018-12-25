@@ -3,7 +3,6 @@
 <h2>TODO:</h2
 <ul>
 <li>Sanitize input from form - Partially complete</li>
-<li>Update not working for some reason - need to look at it later with some fresh eyes<li> 
-</ul> 
+<li>Update not working for some reason - need to look at it later with some fresh eyes<li></ul> 
 
 
