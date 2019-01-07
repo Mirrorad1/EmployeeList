@@ -41,8 +41,9 @@ function insertData(req,res){
 
 
 function updateData(req, res) {
-    Employee.findOneAndUpdate({ _id: req.body._id }, req.body, { new: true }, (err, doc) => {
-        if (!err) { res.redirect('employee/list'); }
+    Employee.findByIdAndUpdate({ _id: req.body._id }, req.body, { new: true }, (err, doc) => {
+        if (!err){
+            res.redirect('employee/list'); }
         else {
             if (err.name == 'ValidationError') {
                 handleValidationError(err, req.body);
@@ -52,10 +53,11 @@ function updateData(req, res) {
                 });
             }
             else
-                console.log('Error during record update : ' + err);
+                console.log('Error during update : ' + err);
         }
     });
 }
+
 
 router.get('/list', (req, res) => {
     Employee.find((err, docs) => {
@@ -99,7 +101,7 @@ router.get('/:id', (req, res) => {
 router.get('/delete/:id', (req,res) => {
         Employee.findByIdAndRemove(req.params.id, (err,doc) => {
             if(!err){
-                res.redirect('employee/list');
+                res.redirect('/employee/list');
             }
             else {console.log('Error deleting: ' + err);}
         });
